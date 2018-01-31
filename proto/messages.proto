@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package messages;
+
+message Repository {
+    string name = 1;
+    string description = 2;
+    int64  starts = 3;
+    float  code_frequency = 4;
+    map<string, int32> language_contributions = 5;
+}
+
+message EnrollmentResponse {
+    bool ack = 1;
+}

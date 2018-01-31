@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "messages.proto";
+
+package services;
+
+service RepositoryEnrollerService {
+    rpc enroll (messages.Repository) returns (messages.EnrollmentResponse) {}
+}
