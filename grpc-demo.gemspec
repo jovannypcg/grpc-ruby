@@ -18,6 +18,8 @@ Gem::Specification.new do |s|
   s.platform      = Gem::Platform::RUBY
 
   s.add_dependency 'grpc', '~> 1.0'
+  s.add_dependency 'bunny', '>= 2.8.0'
+  s.add_dependency 'pry-nav', '~> 0.2.4'
 
   s.add_development_dependency 'bundler', '~> 1.7'
 end

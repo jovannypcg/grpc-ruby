@@ -5,6 +5,7 @@ $LOAD_PATH.unshift(lib_dir) unless $LOAD_PATH.include?(lib_dir)
 require 'grpc'
 require 'services_services_pb'
 require 'messages_pb'
+require 'pry'
 
 def main
   stub = Services::RepositoryEnrollerService::Stub.new('localhost:5003', :this_channel_is_insecure)
