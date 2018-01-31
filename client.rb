@@ -6,8 +6,13 @@ require 'grpc'
 require 'services_services_pb'
 require 'messages_pb'
 require 'pry'
+require 'bunny'
 
-def main
+STDOUT.sync = true
+
+QUEUE_NAME = 'repository_enrollments_ruby'
+
+def enroll_internal()
   stub = Services::RepositoryEnrollerService::Stub.new('localhost:5003', :this_channel_is_insecure)
 
   repository = Messages::Repository.new(
@@ -20,6 +25,39 @@ def main
   response = stub.enroll(repository)
 
   puts "Response: #{response.inspect}"
+end
+
+def read_from_queue
+  conn = Bunny.new
+  conn.start
+
+  ch = conn.create_channel
+  queue  = ch.queue(QUEUE_NAME, :auto_delete => false)
+  x  = ch.default_exchange
+
+  queue.subscribe do |delivery_info, metadata, payload|
+    puts " ===> Received bytes: #{payload.bytes}"
+    puts " ===> Decoding payload..."
+
+    decoded_repository = Messages::Repository.decode(payload)
+
+    puts " ===> Decoded repository: #{decoded_repository.inspect}"
+    puts
+  end
+
+  conn.close
+end
+
+def main
+  if ARGV.empty?
+    enroll_internal
+    return
+  end
+
+  case ARGV[0]
+  when 'r'
+    read_from_queue
+  end
 end
 
 main
